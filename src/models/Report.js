@@ -6,7 +6,7 @@ class Report extends Model {
       {
         title: DataTypes.STRING,
         date_exam: DataTypes.DATE,
-        link: DataTypes.STRING
+        link: DataTypes.STRING,
       },
       {
         sequelize,
@@ -14,8 +14,12 @@ class Report extends Model {
     );
   }
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'patient_id', as: 'patientOwner' });
-    this.belongsTo(models.User, { foreignKey: 'doctor_id', as: 'doctorOwner'});
+    this.belongsTo(models.User, {
+      foreignKey: "patient_id",
+      as: "patientOwner",
+    });
+    this.belongsTo(models.User, { foreignKey: "doctor_id", as: "doctorOwner" });
+    this.hasOne(models.Historic, { foreignKey: "report_id", as: "hasOne" });
   }
 }
 

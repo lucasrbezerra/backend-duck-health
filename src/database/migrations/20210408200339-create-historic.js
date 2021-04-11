@@ -2,38 +2,26 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable("reports", {
+    return queryInterface.createTable("historics", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      patient_id: {
+      report_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "users", key: "id" },
+        references: { model: "reports", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      doctor_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "users", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "NO ACTION",
-      },
-      title: {
+      full_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      date_exam: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      link: {
+      specialty: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -47,6 +35,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("reports");
+    return queryInterface.dropTable("historics");
   },
 };

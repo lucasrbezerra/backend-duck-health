@@ -21,4 +21,17 @@ module.exports = {
 
     return res.json(patient);
   },
+
+  async delete(req, res) {
+    const { patient_id } = req.params;
+
+    const patient = await User.findByPk(patient_id);
+    if (patient) {
+      await patient.destroy();
+    } else {
+      return res.status(400).send({ Error: "User not found!" });
+    }
+
+    return res.json({ Sucessefully: `doctor_id ${patient_id} destroied!` });
+  },
 };

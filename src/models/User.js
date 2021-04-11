@@ -5,9 +5,9 @@ class User extends Model {
     super.init(
       {
         full_name: DataTypes.STRING,
+        specialty: DataTypes.STRING,
         login: DataTypes.STRING,
         hashed_password: DataTypes.STRING,
-        specialty: DataTypes.STRING,
         user_class: DataTypes.STRING,
       },
       {
