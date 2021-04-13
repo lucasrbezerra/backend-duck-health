@@ -23,6 +23,7 @@ routes.post("/admins", AdminController.store);
 /* Rotas de Pacientes */
 routes.get("/patients/list", PatientController.index);
 routes.post("/patients/create", PatientController.store);
+routes.put("/patients/edit/:patient_id", PatientController.edit);
 routes.delete("/patients/del/:patient_id", PatientController.delete);
 
 routes.get("/patients/:patient_id", QueryController.queryReports);
@@ -30,6 +31,7 @@ routes.get("/patients/:patient_id", QueryController.queryReports);
 /* Rotas de Médicos */
 routes.get("/doctors/list", DoctorController.index);
 routes.post("/doctors/create", DoctorController.store);
+routes.put("/doctors/edit/:doctor_id", DoctorController.edit);
 routes.delete("/doctors/del/:doctor_id", DoctorController.delete);
 
 routes.get("/doctors/:doctor_id", QueryController.queryMyPatients);

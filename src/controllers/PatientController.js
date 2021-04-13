@@ -22,6 +22,25 @@ module.exports = {
     return res.json(patient);
   },
 
+  async edit(req, res) {
+    const { patient_id } = req.params;
+    const { full_name, login, hashed_password } = req.body;
+
+    const patient = await User.findByPk(patient_id);
+
+    if(!patient){
+      return res.status(400).json({ error: "User not found!"});
+    }
+
+    patient.full_name = full_name;
+    patient.login = login;
+    patient.hashed_password = hashed_password;
+
+    const patientEdited = await patient.save();
+
+    return res.json(patientEdited);
+  },
+
   async delete(req, res) {
     const { patient_id } = req.params;
 
