@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const Report = require("../models/Report");
+const bcrypt = require("bcrypt");
+
 
 module.exports = {
   async index(req, res) {
@@ -8,16 +10,16 @@ module.exports = {
   },
 
   async store(req, res) {
-    const { full_name, specialty, login, hashed_password } = req.body;
+    const { full_name, login, hashed_password, specialty } = req.body;
 
     const user_class = "doctor";
 
     const doctor = await User.create({
       full_name,
-      specialty,
       login,
       hashed_password,
-      user_class,
+      specialty,
+      user_class
     });
 
     return res.json(doctor);

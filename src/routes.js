@@ -6,35 +6,55 @@ const DoctorController = require("./controllers/DoctorController");
 const ReportController = require("./controllers/ReportController");
 const QueryController = require("./controllers/QueryController");
 const HistoricController = require("./controllers/HistoricController");
+const AuthController = require("./controllers/AuthController");
+const Middlewares = require("./middlewares/Middlewares");
 
 const routes = express.Router();
 
-routes.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
 /* Rotas de todos os usuarios */
 routes.get("/users", UserController.index);
-routes.get('/users/list/logins', UserController.listLogins);
+routes.get("/users/list/logins", UserController.listLogins);
+
+routes.post("/login", AuthController.login);
+routes.post("/logout", Middlewares.logout);
 
 /* Rotas de Admin */
 routes.get("/admins", AdminController.index);
 routes.post("/admins", AdminController.store);
+
 /* Rotas de Pacientes */
-routes.get("/patients/list", PatientController.index);
-routes.post("/patients/create", PatientController.store);
-routes.put("/patients/edit/:patient_id", PatientController.edit);
-routes.delete("/patients/del/:patient_id", PatientController.delete);
+routes.get("/patients/list", Middlewares.authRoleMixed("admin", "doctor") , PatientController.index);
+routes.post("/patients/create", Middlewares.verifyJWT, Middlewares.authRole("admin"), PatientController.store);
+routes.put(
+  "/patients/edit/:patient_id",
+  Middlewares.verifyJWT,
+  Middlewares.authRole("admin"),
+  PatientController.edit
+);
+routes.delete(
+  "/patients/del/:patient_id",
+  Middlewares.verifyJWT,
+  Middlewares.authRole("admin"),
+  PatientController.delete
+);
 
 routes.get("/patients/:patient_id", QueryController.queryReports);
 
 /* Rotas de Médicos */
-routes.get("/doctors/list", DoctorController.index);
-routes.post("/doctors/create", DoctorController.store);
-routes.put("/doctors/edit/:doctor_id", DoctorController.edit);
-routes.delete("/doctors/del/:doctor_id", DoctorController.delete);
+routes.get("/doctors/list", Middlewares.verifyJWT, DoctorController.index);
+routes.post("/doctors/create", Middlewares.verifyJWT, DoctorController.store);
+routes.put(
+  "/doctors/edit/:doctor_id",
+  Middlewares.verifyJWT,
+  DoctorController.edit
+);
+routes.delete(
+  "/doctors/del/:doctor_id",
+  Middlewares.verifyJWT,
+  DoctorController.delete
+);
 
-routes.get("/doctors/:doctor_id", QueryController.queryMyPatients);
+routes.get("/doctors/mypat/:doctor_id", QueryController.queryMyPatients);
 
 /* Rota de testes  */
 routes.get("/reports", ReportController.index);

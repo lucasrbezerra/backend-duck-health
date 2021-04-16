@@ -54,7 +54,7 @@ module.exports = {
 
     const patients = await sequelize.query(
       `
-      SELECT DISTINCT pat.* FROM reports r
+      SELECT DISTINCT pat.id, pat.full_name, pat.login FROM reports r
       JOIN users doc
       ON doc.id = r.doctor_id
       JOIN users pat 
