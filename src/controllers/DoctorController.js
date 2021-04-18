@@ -1,7 +1,5 @@
 const User = require("../models/User");
 const Report = require("../models/Report");
-const bcrypt = require("bcrypt");
-
 
 module.exports = {
   async index(req, res) {
@@ -19,7 +17,7 @@ module.exports = {
       login,
       hashed_password,
       specialty,
-      user_class
+      user_class,
     });
 
     return res.json(doctor);
@@ -31,8 +29,8 @@ module.exports = {
 
     const doctor = await User.findByPk(doctor_id);
 
-    if(!doctor){
-      return res.status(400).json({ error: "User not found!"});
+    if (!doctor) {
+      return res.status(400).json({ error: "User not found!" });
     }
 
     doctor.full_name = full_name;

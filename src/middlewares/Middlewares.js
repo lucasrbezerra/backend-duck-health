@@ -25,14 +25,14 @@ module.exports = {
     res.end();
   },
 
-  authRole(role) {
+  authRole(user_class) {
     return (req, res, next) => {
       try {
         const token = req.headers["x-access-token"];
 
         const decode = jwt.verify(token, process.env.SECRET);
 
-        if (decode.user_class !== role) return res.status(401).end();
+        if (decode.user_class !== user_class) return res.status(401).end();
 
         next();
       } catch (error) {
@@ -41,19 +41,23 @@ module.exports = {
     };
   },
 
-  authRoleMixed(role1, role2) {
+  authRoleMixed(user_class1, user_class2) {
     return (req, res, next) => {
       try {
         const token = req.headers["x-access-token"];
 
         const decode = jwt.verify(token, process.env.SECRET);
 
-        if (decode.user_class !== role1 && decode.user_class !== role2) return res.status(401).end();
+        if (
+          decode.user_class !== user_class1 &&
+          decode.user_class !== user_class2
+        )
+          return res.status(401).end();
 
         next();
       } catch (error) {
         console.log(error);
       }
     };
-  }
+  },
 };

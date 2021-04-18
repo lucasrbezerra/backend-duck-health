@@ -23,8 +23,17 @@ routes.get("/admins", AdminController.index);
 routes.post("/admins", AdminController.store);
 
 /* Rotas de Pacientes */
-routes.get("/patients/list", Middlewares.authRoleMixed("admin", "doctor") , PatientController.index);
-routes.post("/patients/create", Middlewares.verifyJWT, Middlewares.authRole("admin"), PatientController.store);
+routes.get(
+  "/patients/list",
+  Middlewares.authRoleMixed("admin", "doctor"),
+  PatientController.index
+);
+routes.post(
+  "/patients/create",
+  Middlewares.verifyJWT,
+  Middlewares.authRole("admin"),
+  PatientController.store
+);
 routes.put(
   "/patients/edit/:patient_id",
   Middlewares.verifyJWT,
@@ -38,7 +47,8 @@ routes.delete(
   PatientController.delete
 );
 
-routes.get("/patients/:patient_id", QueryController.queryReports);
+routes.get("/patients/:patient_id", QueryController.queryPatient);
+routes.get("/patients/reports/:patient_id", QueryController.queryReports);
 
 /* Rotas de Médicos */
 routes.get("/doctors/list", Middlewares.verifyJWT, DoctorController.index);

@@ -22,13 +22,13 @@ module.exports = {
     const { id, full_name, user_class } = user[0].dataValues;
 
     const token = jwt.sign({ id, full_name, user_class }, process.env.SECRET, {
-      expiresIn: 300, // expires in 5min
+      expiresIn: 86400, // expires in 5min
     });
 
     return res.json({
       id,
       full_name,
-      role: user_class,
+      user_class,
       auth: true,
       token: token,
     });

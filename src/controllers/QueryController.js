@@ -18,10 +18,25 @@ module.exports = {
       where: { patient_id },
       include: [
         { association: "doctorOwner", attributes: ["full_name", "specialty"] },
+        { association: "patientOwner", attributes: ["full_name"]},
       ],
     });
 
     return res.json(reports);
+  },
+
+  async queryPatient(req, res) {
+    const { patient_id } = req.params;
+
+    const user = await User.findByPk(patient_id);
+
+    if(!user) {
+      return res.status(400).json({ error: "Patient not"});
+    }
+
+    const { full_name } = user;
+
+    return res.json(full_name);
   },
 
   /* Busque todos os pacientes que um médico já enviou um laudo */

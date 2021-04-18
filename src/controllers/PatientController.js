@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Report = require("../models/Report");
-const bcrypt = require("bcrypt");
 
 module.exports = {
   async index(req, res) {
