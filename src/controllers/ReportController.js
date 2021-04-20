@@ -15,6 +15,8 @@ module.exports = {
     const { doctor_id, patient_id } = req.params;
     const { title, date_exam, link } = req.body;
 
+    console.log("date and title ======> ", title, date_exam, link);
+
     const patient = User.findByPk(patient_id);
     const doctor = User.findByPk(doctor_id);
 
@@ -31,5 +33,19 @@ module.exports = {
     });
 
     return res.json(report);
+  },
+
+  async delete(req, res) {
+    const { report_id } = req.params;
+
+    const report = await Report.findByPk(report_id);
+
+    if (report) {
+      await report.destroy();
+    } else {
+      return res.status(400).send({ Error: "Report not found!" });
+    }
+
+    return res.json({ Sucessefully: `report_id ${report} destroied!` });
   },
 };
