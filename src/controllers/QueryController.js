@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Report = require("../models/Report");
+const Historic = require("../models/Historic");
 const { QueryTypes } = require("sequelize");
 const sequelize = require("../database/index");
 
@@ -39,6 +40,21 @@ module.exports = {
     return res.json(full_name);
   },
 
+
+  async getHistorical(req, res) {
+    const { report_id } = req.params;
+
+    const report = await Report.findByPk(report_id);
+
+    if(!report) {
+      res.status(404).send({error: "Report not found!"});
+    }
+
+    const historic = await Historic.findOne({ where: { report_id } });
+
+    return res.json(historic);
+
+  },
   /* Busque todos os pacientes que um médico já enviou um laudo */
   /*
   async queryMyPatients(req, res) {

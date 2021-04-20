@@ -1,6 +1,4 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
 const UserController = require("./controllers/UserController");
 const AdminController = require("./controllers/AdminController");
 const PatientController = require("./controllers/PatientController");
@@ -10,6 +8,7 @@ const QueryController = require("./controllers/QueryController");
 const HistoricController = require("./controllers/HistoricController");
 const AuthController = require("./controllers/AuthController");
 const Middlewares = require("./middlewares/Middlewares");
+const { upload } = require("./config/multer");
 
 const routes = express.Router();
 
@@ -68,27 +67,23 @@ routes.delete(
 
 routes.get("/doctors/mypat/:doctor_id", QueryController.queryMyPatients);
 
-/* Rota de Upload */
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "src/uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname + Date.now() + path.extname(file.originalname));
-  },
-});
+/* Rota de Upload e Reports*/
 
-const upload = multer({ storage });
+routes.post(
+  "/upload/:doctor_id/:patient_id",
+  upload.single("file"),
+  ReportController.store
+);
 
-routes.post("/reports/:doctor_id/:patient_id", upload.single("file"), ReportController.store);
 routes.delete("/reports/del/:report_id", ReportController.delete);
 
-/* Rota de testes  */
+routes.get("/reports/historic/:report_id", QueryController.getHistorical);
+
+routes.get("/download/:filename", ReportController.download);
+
+/* Rotas de testes */
 routes.get("/reports", ReportController.index);
 
-/* Rota de testes do Historico */
 routes.get("/historics", HistoricController.index);
-
-
 
 module.exports = routes;

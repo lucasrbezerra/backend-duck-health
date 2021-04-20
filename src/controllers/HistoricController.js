@@ -3,7 +3,14 @@ const Report = require("../models/Report");
 
 module.exports = {
   async index(req, res) {
-    const historics = await Historic.findAll();
+    const historics = await Historic.findAll({
+      include: [
+        {
+          association: "HistoricOf",
+          attributes: ["title", "date_exam", "link"],
+        },
+      ],
+    });
 
     return res.json(historics);
   },

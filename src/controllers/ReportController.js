@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Report = require("../models/Report");
 const Historic = require("../models/Historic");
+const path = require("path");
 
 module.exports = {
   async index(req, res) {
@@ -13,26 +14,37 @@ module.exports = {
 
   async store(req, res) {
     const { doctor_id, patient_id } = req.params;
-    const { title, date_exam, link } = req.body;
+    const { title, date_exam } = req.body;
+    const file = req.file;
 
-    console.log("date and title ======> ", title, date_exam, link);
-
-    const patient = User.findByPk(patient_id);
-    const doctor = User.findByPk(doctor_id);
+    const patient = await User.findByPk(patient_id);
+    const doctor = await User.findByPk(doctor_id);
 
     if (!patient || !doctor) {
-      res.status(400).json({ error: "Patient or Doctor not found. " });
+      res.status(400).json({ error: "Patient or Doctor not found!" });
     }
 
-    const report = await Report.create({
-      title,
-      date_exam,
-      link,
-      doctor_id,
-      patient_id,
-    });
+    const link = `${file.filename}`;
 
-    return res.json(report);
+    try {
+      const report = await Report.create({
+        title,
+        date_exam,
+        link,
+        doctor_id,
+        patient_id,
+      });
+
+      await Historic.create({
+        full_name: doctor.full_name,
+        specialty: doctor.specialty,
+        report_id: report.dataValues.id,
+      });
+
+      return res.json(report);
+    } catch (e) {
+      console.log(e);
+    }
   },
 
   async delete(req, res) {
@@ -46,6 +58,13 @@ module.exports = {
       return res.status(400).send({ Error: "Report not found!" });
     }
 
-    return res.json({ Sucessefully: `report_id ${report} destroied!` });
+    return res.json({ Sucessefully: `report_id ${report.id} destroied!` });
+  },
+
+  download(req, res) {
+    const uploadFolder = `${path.join("src")}` + `\\uploads\\`;
+    let fileName = req.params.filename;
+    const filePath = uploadFolder + fileName;
+    res.download(filePath, fileName);
   },
 };
